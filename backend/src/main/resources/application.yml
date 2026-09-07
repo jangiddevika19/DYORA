@@ -31,8 +31,8 @@ dyora:
     secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
 
-  cors:
-    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173,https://dyora-five.vercel.app}
+    cors:
+    allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173}
 
   ai:
     api-key: ${AI_API_KEY:}
