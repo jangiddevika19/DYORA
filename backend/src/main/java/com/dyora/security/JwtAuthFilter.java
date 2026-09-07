@@ -26,12 +26,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
 
-    // Public endpoints ko JWT filter se completely skip karo
+    /**
+     * Public endpoints aur CORS preflight requests
+     * JWT authentication se completely skip honge.
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+
         String path = request.getServletPath();
 
-        return path.equals("/actuator/health")
+        return request.getMethod().equalsIgnoreCase("OPTIONS")
+                || path.equals("/actuator/health")
                 || path.startsWith("/api/auth/");
     }
 
@@ -44,7 +49,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        // Authorization header nahi hai to request ko normally continue karo
+        // Authorization header nahi hai,
+        // request ko normally continue karo.
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -53,6 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = authHeader.substring(7);
 
         try {
+
             String email = jwtUtil.extractEmail(token);
 
             if (email != null
@@ -60,7 +67,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 Optional<User> userOpt = userRepository.findByEmail(email);
 
-                if (userOpt.isPresent() && jwtUtil.isTokenValid(token, email)) {
+                if (userOpt.isPresent()
+                        && jwtUtil.isTokenValid(token, email)) {
 
                     User user = userOpt.get();
 
@@ -82,9 +90,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             }
 
         } catch (JwtException | IllegalArgumentException ex) {
-            // Invalid/expired JWT → unauthenticated hi rehne do
+
+            // Invalid ya expired JWT hone par
+            // request unauthenticated hi rahegi.
         }
 
         filterChain.doFilter(request, response);
     }
 }
+
