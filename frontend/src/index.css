@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DYORA DESIGN SYSTEM
+   A dimensional, editorial, cinematic-dark identity.
+   No blue gradients. No glassmorphism clichés.
+   ============================================================ */
+
+@theme {
+  /* Base surfaces — obsidian / charcoal, never pure black */
+  --color-obsidian-950: #0b0a0d;
+  --color-obsidian-900: #131116;
+  --color-obsidian-800: #1b181f;
+  --color-obsidian-700: #26222a;
+  --color-obsidian-600: #332d38;
+
+  /* Ivory / warm text */
+  --color-ivory-100: #f7f3ee;
+  --color-ivory-200: #ece5db;
+  --color-ivory-300: #d8cec1;
+
+  /* Plum — the DYORA signature accent */
+  --color-plum-900: #3a1f3d;
+  --color-plum-700: #5c2f5f;
+  --color-plum-500: #8a4a8e;
+  --color-plum-400: #a866ad;
+  --color-plum-300: #c78fca;
+
+  /* Muted lavender */
+  --color-lavender-400: #a9a1d4;
+  --color-lavender-300: #c3bce3;
+
+  /* Rose / peach warmth */
+  --color-rose-400: #d98e83;
+  --color-rose-300: #e6b3a8;
+  --color-peach-300: #eec9a3;
+
+  /* Silver */
+  --color-silver-300: #b9bcc2;
+  --color-silver-200: #d4d6da;
+
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+
+  --radius-organic: 42% 58% 61% 39% / 45% 42% 58% 55%;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-obsidian-950);
+  color: var(--color-ivory-100);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-plum-500);
+  color: var(--color-ivory-100);
+}
+
+/* Subtle film-grain texture applied over dark surfaces for a cinematic feel */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.atmospheric-bg {
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 0%, rgba(138, 74, 142, 0.16), transparent 60%),
+    radial-gradient(ellipse 55% 45% at 85% 15%, rgba(217, 142, 131, 0.10), transparent 60%),
+    radial-gradient(ellipse 70% 60% at 50% 100%, rgba(169, 161, 212, 0.10), transparent 65%),
+    var(--color-obsidian-950);
+}
+
+.editorial-card {
+  background: linear-gradient(155deg, rgba(38, 34, 42, 0.7), rgba(19, 17, 22, 0.85));
+  border: 1px solid rgba(216, 206, 193, 0.08);
+  box-shadow: 0 20px 60px -30px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.03);
+}
+
+.sculptural-border {
+  border: 1px solid rgba(216, 206, 193, 0.1);
+}
+
+.text-gradient-plum {
+  background: linear-gradient(120deg, var(--color-ivory-100), var(--color-plum-300) 60%, var(--color-rose-300));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Scrollbars matching the dark editorial identity */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--color-obsidian-600);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--color-plum-700); }
+
+/* Focus states for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-plum-400);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Markdown content inside assistant messages */
+.dyora-prose {
+  color: var(--color-ivory-200);
+  line-height: 1.75;
+}
+.dyora-prose h1, .dyora-prose h2, .dyora-prose h3 {
+  font-family: var(--font-display);
+  color: var(--color-ivory-100);
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+}
+.dyora-prose p { margin-bottom: 0.9em; }
+.dyora-prose ul, .dyora-prose ol { margin: 0.6em 0 0.9em 1.4em; }
+.dyora-prose li { margin-bottom: 0.35em; }
+.dyora-prose code {
+  background: rgba(216, 206, 193, 0.08);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.dyora-prose a { color: var(--color-plum-300); text-decoration: underline; text-underline-offset: 2px; }
+.dyora-prose blockquote {
+  border-left: 3px solid var(--color-plum-500);
+  padding-left: 1em;
+  color: var(--color-ivory-300);
+  font-style: italic;
+  margin: 0.8em 0;
+}
+.dyora-prose table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+.dyora-prose th, .dyora-prose td {
+  border: 1px solid rgba(216,206,193,0.12);
+  padding: 0.5em 0.75em;
+  text-align: left;
+}
+.dyora-prose th { background: rgba(216,206,193,0.06); }
