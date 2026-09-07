@@ -31,12 +31,12 @@ dyora:
     secret: ${JWT_SECRET}
     expiration-ms: ${JWT_EXPIRATION_MS:86400000}
 
-    cors:
+  cors:
     allowed-origins: ${ALLOWED_ORIGINS:http://localhost:5173}
 
   ai:
     api-key: ${AI_API_KEY:}
-    base-url: ${AI_BASE_URL:https://generativelanguage.googleapis.com/v1beta/openai}
+    base-url: ${AI_API_BASE_URL:https://generativelanguage.googleapis.com/v1beta/openai}
     model: ${AI_MODEL:gemini-3.8-flash}
     provider: ${AI_PROVIDER:openai-compatible}
 
