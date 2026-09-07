@@ -55,9 +55,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
-        return build(HttpStatus.INTERNAL_SERVER_ERROR, "Something went wrong on our end. Please try again.");
-    }
+public ResponseEntity<ErrorResponse> handleGeneric(Exception ex) {
+    ex.printStackTrace();
+
+    return build(
+            HttpStatus.INTERNAL_SERVER_ERROR,
+            ex.getClass().getSimpleName() + ": " + ex.getMessage()
+    );
+}
 
     private ResponseEntity<ErrorResponse> build(HttpStatus status, String message) {
         return ResponseEntity.status(status).body(
