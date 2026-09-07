@@ -1,4 +1,3 @@
-
 package com.dyora.config;
 
 import com.dyora.security.JwtAuthFilter;
@@ -48,21 +47,33 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+            // Disable CSRF because we are using JWT authentication
             .csrf(csrf -> csrf.disable())
 
+            // Enable CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
+            // JWT based authentication = stateless
             .sessionManagement(sm ->
                 sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
             .authorizeHttpRequests(auth -> auth
+
+                // Allow CORS preflight requests
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Public authentication APIs
                 .requestMatchers("/api/auth/**").permitAll()
+
+                // Health check
                 .requestMatchers("/actuator/health").permitAll()
+
+                // Everything else requires JWT
                 .anyRequest().authenticated()
             )
 
+            // JWT filter
             .addFilterBefore(
                 jwtAuthFilter,
                 UsernamePasswordAuthenticationFilter.class
@@ -76,13 +87,27 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
+        /*
+         * Read allowed origins from application.yml / Render environment.
+         *
+         * Example:
+         * ALLOWED_ORIGINS=https://dyora-five.vercel.app
+         *
+         * Or locally + production:
+         * ALLOWED_ORIGINS=http://localhost:5173,https://dyora-five.vercel.app
+         */
         List<String> origins = Arrays.stream(allowedOrigins.split(","))
                 .map(String::trim)
                 .filter(origin -> !origin.isEmpty())
                 .toList();
 
-        configuration.setAllowedOrigins(origins);
+        /*
+         * Use allowed origin patterns.
+         * This works reliably with Spring Security CORS handling.
+         */
+        configuration.setAllowedOriginPatterns(origins);
 
+        // Allowed HTTP methods
         configuration.setAllowedMethods(List.of(
                 "GET",
                 "POST",
@@ -92,9 +117,19 @@ public class SecurityConfig {
                 "OPTIONS"
         ));
 
+        // Allow request headers such as Content-Type and Authorization
         configuration.setAllowedHeaders(List.of("*"));
 
+        // Expose Authorization header to frontend
+        configuration.setExposedHeaders(List.of(
+                "Authorization"
+        ));
+
+        // Required when frontend sends credentials/cookies
         configuration.setAllowCredentials(true);
+
+        // Cache successful preflight response for 1 hour
+        configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source =
                 new UrlBasedCorsConfigurationSource();
@@ -104,4 +139,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
